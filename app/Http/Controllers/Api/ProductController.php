@@ -10,11 +10,11 @@ class ProductController extends Controller
 {
     public function index()
     {
-        $product = Product::all();
+        $products = Product::all();
         return response()->json([
             'message' => 'Producto creado exitosamente',
-            'product' => $product
-        ], 201);
+            'products' => $products
+        ], 200);
     }
 
     public function store(Request $request)
