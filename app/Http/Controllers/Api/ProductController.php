@@ -10,17 +10,29 @@ class ProductController extends Controller
 {
     public function index()
     {
-        return Product::all();
+        $product = Product::all();
+        return response()->json([
+            'message' => 'Producto creado exitosamente',
+            'product' => $product
+        ], 201);
     }
 
     public function store(Request $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'price' => 'required|numeric',
-        ]);
+        // Validación de los datos de entrada
+    $validatedData = $request->validate([
+        'name' => 'required|string|max:255',
+        'price' => 'required|numeric',
+    ]);
 
-        return Product::create($request->all());
+    // Creación del producto
+    $product = Product::create($validatedData);
+
+    // Devolución de la respuesta en formato JSON
+    return response()->json([
+        'message' => 'Producto creado exitosamente',
+        'product' => $product
+    ], 201);
     }
 
     public function show(Product $product)
