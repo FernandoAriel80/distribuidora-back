@@ -12,7 +12,7 @@ class ProductController extends Controller
     {
         $products = Product::all();
         return response()->json([
-            'message' => 'Producto creado exitosamente',
+            'message' => 'Producto creado exitosamente si',
             'products' => $products
         ], 200);
     }
