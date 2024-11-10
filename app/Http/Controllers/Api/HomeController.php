@@ -54,7 +54,7 @@ class HomeController extends Controller
                 'searchTerm' => $search,
                 'categoryTerm' => $category,
                 'sortOrder' => $sort  
-            ], 201);
+            ], 200);
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Error al obtener producto.',
