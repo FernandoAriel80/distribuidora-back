@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\HomeController;
+use App\Http\Controllers\Api\LayoutController;
 //use App\Http\Controllers\Api\CartController;
 //use App\Http\Controllers\Api\EmployeeController;
 
@@ -23,7 +24,7 @@ Route::middleware('guest')->group(function() {
 // Rutas autenticadas para usuarios registrados
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('api.logout');
-
+    Route::get('/layout', [LayoutController::class, 'index'])->name('api.layout');
     // Rutas para el carrito
    /*  Route::prefix('cart')->group(function() {
         Route::get('/', [CartController::class, 'index'])->name('cart.index');

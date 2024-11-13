@@ -48,9 +48,7 @@ class AuthController extends Controller
                 'email' => 'required|email',
                 'password' => 'required',
             ]);
-            
             if(Auth::attempt($validated, $request->remember)){
-                $request->session()->regenerate();
                 return response()->json(['message' => 'Se inicio sesión exitosamente.'], 200);
             }
             return response()->json(['message' => 'Los datos no coinciden.'], 400);
@@ -65,8 +63,8 @@ class AuthController extends Controller
     {
         try {
             Auth::logout();
-            $request->session()->invalidate();
-            $request->session()->regenerateToken();
+     /*        $request->session()->invalidate();
+            $request->session()->regenerateToken(); */
     
             return response()->json(['message' => 'Se cerro la sesión exitosamente.'], 200);
         } catch (\Exception $e) {
