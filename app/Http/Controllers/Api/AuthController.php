@@ -7,6 +7,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
@@ -30,7 +32,6 @@ class AuthController extends Controller
                 'role' => 'cliente',
             ]);
             
-            Auth::login($user);
             return response()->json(['message' => 'Se registro exitosamente.'], 200);
         } catch (\Exception $e) {
             return response()->json([
@@ -48,10 +49,17 @@ class AuthController extends Controller
                 'email' => 'required|email',
                 'password' => 'required',
             ]);
-            if(Auth::attempt($validated, $request->remember)){
-                return response()->json(['message' => 'Se inicio sesión exitosamente.'], 200);
+            $user = User::where('email', $request->email)->first();
+
+            if (!$user || !Hash::check($request->password, $user->password)) {
+                throw ValidationException::withMessages([
+                    'email' => ['Las credenciales no coinciden.'],
+                ]);
             }
-            return response()->json(['message' => 'Los datos no coinciden.'], 400);
+    
+            $token = $user->createToken('auth_token')->plainTextToken;
+    
+            return response()->json(['token' => $token]);
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Error al registrar usuario.',
@@ -62,16 +70,17 @@ class AuthController extends Controller
     public function logout(Request $request)
     {
         try {
-            Auth::logout();
-     /*        $request->session()->invalidate();
-            $request->session()->regenerateToken(); */
-    
-            return response()->json(['message' => 'Se cerro la sesión exitosamente.'], 200);
+            $request->user()->currentAccessToken()->delete();
+            return response()->json(['message' => 'Sesión cerrada con éxito.']);
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Error al cerrar sesión.',
                 'error' => $e->getMessage()
             ], 500);
         }
+    }
+    public function user(Request $request)
+    {
+        return response()->json($request->user());
     }
 }

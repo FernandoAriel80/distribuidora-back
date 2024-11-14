@@ -19,12 +19,14 @@ Route::get('/', [HomeController::class, 'index'])->name('home.index');
 Route::middleware('guest')->group(function() {
     Route::post('/register', [AuthController::class, 'register'])->name('api.register');
     Route::post('/login', [AuthController::class, 'login'])->name('api.login');
+
 });
+Route::middleware('auth:sanctum')->get('/user', [AuthController::class, 'user']);
 
 // Rutas autenticadas para usuarios registrados
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('api.logout');
-    Route::get('/layout', [LayoutController::class, 'index'])->name('api.layout');
+ 
     // Rutas para el carrito
    /*  Route::prefix('cart')->group(function() {
         Route::get('/', [CartController::class, 'index'])->name('cart.index');
