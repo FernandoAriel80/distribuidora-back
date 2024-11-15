@@ -60,7 +60,10 @@ class AuthController extends Controller
     
             $token = $user->createToken($user->name);
     
-            return response()->json(['token' => $token->plainTextToken]);
+            return response()->json([
+                'token' => $token->plainTextToken,
+                'name' =>$user->name
+            ]);
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Error al registrar usuario.',

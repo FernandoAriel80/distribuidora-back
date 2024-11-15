@@ -25,7 +25,7 @@ Route::middleware('guest')->group(function() {
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', [AuthController::class, 'user']);
     Route::post('/logout', [AuthController::class, 'logout'])->name('api.logout');
-    Route::get('/admin/products', [ProductController::class, 'index']);
+    //Route::get('/admin/products', [ProductController::class, 'index']);
     // Rutas para el carrito
    /*  Route::prefix('cart')->group(function() {
         Route::get('/', [CartController::class, 'index'])->name('cart.index');
@@ -35,18 +35,18 @@ Route::middleware('auth:sanctum')->group(function () {
     }); */
 
     // Rutas de administración
-  /*   Route::prefix('admin')->group(function () {
-        
+     Route::prefix('admin')->group(function () {      
         // Rutas solo para administradores (admin y super_admin)
         Route::middleware('is_admin:admin,super_admin')->group(function () {
             Route::prefix('products')->group(function () {
                 Route::get('/', [ProductController::class, 'index']);
+                Route::get('/create', [ProductController::class, 'create']);
                 Route::post('/create', [ProductController::class, 'store']);
                 Route::put('/update/{id}', [ProductController::class, 'update']);
                 Route::delete('/{id}', [ProductController::class, 'destroy']);
             });
         });
-
+/*
         // Rutas solo para super administradores (super_admin)
          Route::middleware('is_admin:super_admin')->group(function () {
             Route::prefix('employees')->group(function() {
@@ -55,6 +55,6 @@ Route::middleware('auth:sanctum')->group(function () {
                 Route::put('/update/{id}', [EmployeeController::class, 'update'])->name('employees.update');
                 Route::delete('/{id}', [EmployeeController::class, 'destroy'])->name('employees.destroy');
             });
-        });
-    }); */
+        });*/
+    }); 
 });

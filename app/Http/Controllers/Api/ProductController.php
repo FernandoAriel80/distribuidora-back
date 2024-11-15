@@ -25,15 +25,10 @@ class ProductController extends Controller
             ->orderBy('id', 'desc')
             ->paginate(5)
             ->withQueryString();
-            $categories = Category::all('id','name');
-            $types = Type::all('id','name');
             
             return response()->json([
                 'message' => 'Producto obtenido exitosamente',
                 'products' => $products,
-                'categories' => $categories,
-                'types' => $types,
-                'searchTerm' => $search,
             ], 200);
             
         } catch (\Exception $e) {
@@ -220,5 +215,9 @@ class ProductController extends Controller
                 'error' => $e->getMessage()
             ], 500);
         }      
+    }
+
+    public function getCategoryAndType(){
+
     }
 }
