@@ -16,11 +16,11 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias(aliases: [
             'is_admin' => RoleMiddleware::class,
-            'api' => [
+        /*     'api' => [
                 \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
                 'throttle:api',
                 \Illuminate\Routing\Middleware\SubstituteBindings::class,
-            ],
+            ], */
         ]); 
     })
     ->withExceptions(function (Exceptions $exceptions) {

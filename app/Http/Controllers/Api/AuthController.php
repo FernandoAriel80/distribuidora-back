@@ -46,20 +46,21 @@ class AuthController extends Controller
         try {
             sleep(1);
             $validated = $request->validate([
-                'email' => 'required|email',
+                'email' => 'required|email|exists:users',
                 'password' => 'required',
             ]);
-            $user = User::where('email', $request->email)->first();
+            $user = User::where('email', $validated['email'])->first();
 
-            if (!$user || !Hash::check($request->password, $user->password)) {
-                throw ValidationException::withMessages([
+            if (!$user || !Hash::check($validated['password'], $user->password)) {
+               /*  throw ValidationException::withMessages([
                     'email' => ['Las credenciales no coinciden.'],
-                ]);
+                ]); */
+                return response()->json( ['message'=>'Las credenciales no coinciden.']);
             }
     
-            $token = $user->createToken('auth_token')->plainTextToken;
+            $token = $user->createToken($user->name);
     
-            return response()->json(['token' => $token]);
+            return response()->json(['token' => $token->plainTextToken]);
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Error al registrar usuario.',
@@ -70,7 +71,7 @@ class AuthController extends Controller
     public function logout(Request $request)
     {
         try {
-            $request->user()->currentAccessToken()->delete();
+            $request->user()->tokens()->delete();
             return response()->json(['message' => 'Sesión cerrada con éxito.']);
         } catch (\Exception $e) {
             return response()->json([
