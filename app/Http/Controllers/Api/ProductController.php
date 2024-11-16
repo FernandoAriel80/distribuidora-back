@@ -65,7 +65,7 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        //dd('en store');
+        //dd($request);
         sleep(1);
         $fields = $request->validate([
            'catalog_id' => 'required|integer',
