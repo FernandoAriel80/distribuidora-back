@@ -57,12 +57,20 @@ class AuthController extends Controller
                 ]); */
                 return response()->json( ['message'=>'Las credenciales no coinciden.']);
             }
-    
+            
+            $existingToken = $user->tokens()->first();
+            
+            if ($existingToken) {
+                return response()->json([
+                    'token' => $existingToken->plainTextToken,
+                    'message' => 'Sesión iniciada con token existente',
+                ]);
+            }
+
             $token = $user->createToken($user->name);
     
             return response()->json([
                 'token' => $token->plainTextToken,
-                'name' =>$user->name
             ]);
         } catch (\Exception $e) {
             return response()->json([
