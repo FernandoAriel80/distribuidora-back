@@ -74,11 +74,12 @@ class ProductController extends Controller
             'price_offer' => $request->price_offer === '' ? null : $request->price_offer,
             'offer' => filter_var($request->offer, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE),
             'old_price' => $request->old_price === '' ? null : $request->old_price,
-            'stock' => filter_var($request->offer, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE),
+            'stock' => filter_var($request->stock, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE),
         ]);
         
         $fields = $request->validate([
             'catalog_id' => 'required|integer',
+            'barcode' => 'required|integer',
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'unit_price' => 'nullable|numeric|min:0',
@@ -108,7 +109,8 @@ class ProductController extends Controller
             $fields['image_url'] = 'image_url/default.jpeg'; 
         }
         
-        try {        
+        try {       
+            //return response()->json(['message' =>  $fields], 200); 
             Product::create($fields);
             return response()->json(['message' => 'El registro se ha guardado exitosamente.'], 200);
         } catch (\Exception $e) {
