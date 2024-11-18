@@ -13,13 +13,6 @@ class ProductController extends Controller
 {
     public function index(Request $request)
     {
-<<<<<<< HEAD
-        $products = Product::all();
-        return response()->json([
-            'message' => 'Producto creado exitosamente si',
-            'products' => $products
-        ], 200);
-=======
         //dd($request);
         $request->validate([
             'search' => 'nullable|string|max:255',
@@ -45,7 +38,6 @@ class ProductController extends Controller
                 'error' => $e->getMessage()
             ], 500);
         }
->>>>>>> rama1
     }
 
     public function create()
