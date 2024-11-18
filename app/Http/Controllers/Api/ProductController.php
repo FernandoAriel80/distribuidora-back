@@ -145,49 +145,58 @@ class ProductController extends Controller
     public function update(Request $request, $id)
     {
         sleep(1);
+        //return response()->json(['message' => $request->bulk_unit_price], 200);
+        $request->merge([
+            'bulk_unit' => $request->bulk_unit === '' ? null : $request->bulk_unit,
+            'bulk_unit_price' => $request->bulk_unit_price === '' ? null : $request->bulk_unit_price,
+            'percent_off' => $request->percent_off === '' ? null : $request->percent_off,
+            'price_offer' => $request->price_offer === '' ? null : $request->price_offer,
+            'offer' => filter_var($request->offer, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE),
+            'old_price' => $request->old_price === '' ? null : $request->old_price,
+            'stock' => filter_var($request->stock, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE),
+        ]);
+         //return response()->json(['message' => $request->bulk_unit_price], 200);
         $fields = $request->validate([
             'catalog_id' => 'required|integer',
+            'barcode' => 'required|integer',
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'unit_price' => 'required|numeric|min:0',
+            'unit_price' => 'nullable|numeric|min:0',
             'bulk_unit_price' => 'nullable|numeric|min:0',
             'bulk_unit' => 'nullable|numeric|between:0,100',
             'percent_off' => 'nullable|numeric|between:0,100',
-            'offer' => 'nullable|boolean', 
+            'offer' => 'nullable|boolean',
             'price_offer' => 'nullable|numeric|min:0',
             'old_price' => 'nullable|numeric|min:0',
-            'stock' => 'nullable|boolean',
-            'image_url' =>  'nullable|image|mimes:jpeg,png,jpg|max:2048', 
+            'stock' => 'required|boolean',
+            'image_url' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'image_aux' => 'nullable|string',
-            'category_id' => 'nullable|integer',
-            'type_id' => 'nullable|integer',
+            'category_id' => 'required|integer',
+            'type_id' => 'required|integer',
         ]);
-
+        
         if ($fields['offer'] == true){
             $fields['old_price'] = $fields['unit_price'];
             $fields['unit_price'] = $fields['price_offer'];
         }
         $fields['offer'] = $request->has('offer') ? $request->input('offer') : false;
         $fields['stock'] = $request->has('stock') ? $request->input('stock') : false; 
-    
+        
         $product = Product::findOrFail($id);
-      
-        try {
-            if($request->hasFile('image_url')){
-                if($fields['image_aux'] != 'image_url/default.jpeg'){
-                    Storage::disk('public')->delete($fields['image_aux']);
-                }  
-                $filename = time() . '_' . $request->file('image_url')->getClientOriginalName();
-                $fields['image_url'] = Storage::disk('public')->putFileAs('image_url', $request->file('image_url'), $filename);     
-            }else {
-                $fields['image_url'] = $fields['image_aux'];
-            }
-        } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Error al subir la imagen.',
-                'error' => $e->getMessage()
-            ], 500);
+        
+        //return response()->json(['message' => $fields], 200);
+        
+        if($request->hasFile('image_url')){
+            if($fields['image_aux'] != 'image_url/default.jpeg'){
+                Storage::disk('public')->delete($fields['image_aux']);
+            }  
+            $filename = time() . '_' . $request->file('image_url')->getClientOriginalName();
+            $fields['image_url'] = Storage::disk('public')->putFileAs('image_url', $request->file('image_url'), $filename);     
+        }else {
+            $fields['image_url'] = $fields['image_aux'];
         }
+        //return response()->json(['message' => $fields], 200);
+
         try {
             $product->update($fields); 
             return response()->json(['message' => 'El registro se ha actualizado exitosamente.'], 200);

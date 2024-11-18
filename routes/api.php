@@ -42,7 +42,7 @@ Route::middleware('auth:sanctum')->group(function () {
                 Route::get('/', [ProductController::class, 'index']);
                 Route::get('/create', [ProductController::class, 'create']);
                 Route::post('/create', [ProductController::class, 'store']);
-                Route::put('/edit/{id}', [ProductController::class, 'update']);
+                Route::post('/edit/{id}', [ProductController::class, 'update']);
                 Route::delete('/{id}', [ProductController::class, 'destroy']);
             });
         });
