@@ -13,7 +13,7 @@ class ProductController extends Controller
 {
     public function index(Request $request)
     {
-        //dd($request);
+        //dd($request); cambiar
         $request->validate([
             'search' => 'nullable|string|max:255',
         ]);
