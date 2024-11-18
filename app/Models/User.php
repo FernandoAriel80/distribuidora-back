@@ -6,21 +6,39 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-
+use Laravel\Sanctum\HasApiTokens;
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable,HasApiTokens;
 
     /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
      */
+    public function scopeSearch($query, $search)
+    {
+
+        $query->where('role', '=', 'admin');
+ 
+        if ($search) {
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                ->orWhere('email', 'like', "%{$search}%");
+            });
+        }
+        return $query;
+    }
+
+    
+    protected $table = 'users';
+    protected $primarykey = 'id';
     protected $fillable = [
         'name',
+        'last_name',
         'email',
         'password',
+        'role',
     ];
 
     /**
