@@ -8,8 +8,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\HomeController;
+use App\Http\Controllers\Api\EmployeeController;
 //use App\Http\Controllers\Api\CartController;
-//use App\Http\Controllers\Api\EmployeeController;
 
 // Ruta pública para el índice principal
 Route::get('/', [HomeController::class, 'index'])->name('home.index');
@@ -46,15 +46,15 @@ Route::middleware('auth:sanctum')->group(function () {
                 Route::delete('/{id}', [ProductController::class, 'destroy']);
             });
         });
-/*
+
         // Rutas solo para super administradores (super_admin)
          Route::middleware('is_admin:super_admin')->group(function () {
             Route::prefix('employees')->group(function() {
-                Route::get('/', [EmployeeController::class, 'index'])->name('employees.index');
-                Route::post('/create', [EmployeeController::class, 'store'])->name('employees.store');
-                Route::put('/update/{id}', [EmployeeController::class, 'update'])->name('employees.update');
-                Route::delete('/{id}', [EmployeeController::class, 'destroy'])->name('employees.destroy');
+                Route::get('/', [EmployeeController::class, 'index']);
+                Route::post('/create', [EmployeeController::class, 'store']);
+                Route::put('/edit/{id}', [EmployeeController::class, 'update']);
+                Route::delete('/{id}', [EmployeeController::class, 'destroy']);
             });
-        });*/
+        });
     }); 
 });
