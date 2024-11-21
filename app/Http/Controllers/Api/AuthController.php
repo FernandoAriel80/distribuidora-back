@@ -18,8 +18,8 @@ class AuthController extends Controller
         try {
             sleep(1);
             $validated = $request->validate([
-                'name' => 'required|max:255',
-                'last_name' => 'required|max:255',
+                'name' => 'required|max:50',
+                'last_name' => 'required|max:50',
                 'email' => 'required|email|max:255|unique:users',
                 'password' => 'required|confirmed|min:8',
             ]);
