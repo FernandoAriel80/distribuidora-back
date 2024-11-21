@@ -98,9 +98,15 @@ class EmployeeController extends Controller
     public function update(Request $request, string $id)
     {
         sleep(1);
+        
+        //return response()->json(['message' => 'acaaaa'], 200);
         try {
             $user = User::findOrFail($id);
             
+            $request->merge([
+                'password' => $request->password === $request->password_confirmation ? $request->password : null
+            ]);
+
             $fields = $request->validate([
                 'name' => 'max:50',
                 'last_name' => 'max:50',
