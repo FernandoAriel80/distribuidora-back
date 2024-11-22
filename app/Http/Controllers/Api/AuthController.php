@@ -16,7 +16,6 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         try {
-            sleep(1);
             $validated = $request->validate([
                 'name' => 'required|max:50',
                 'last_name' => 'required|max:50',
@@ -44,7 +43,6 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         try {
-            sleep(1);
             $validated = $request->validate([
                 'email' => 'required|email|exists:users',
                 'password' => 'required',

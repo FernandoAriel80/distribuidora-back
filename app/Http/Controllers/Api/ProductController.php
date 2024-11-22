@@ -13,7 +13,6 @@ class ProductController extends Controller
 {
     public function index(Request $request)
     {
-        //dd($request);
         $request->validate([
             'search' => 'nullable|string|max:255',
         ]);
@@ -66,7 +65,6 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        sleep(1);
         $request->merge([
             'bulk_unit' => $request->bulk_unit === '' ? null : $request->bulk_unit,
             'bulk_unit_price' => $request->bulk_unit_price === '' ? null : $request->bulk_unit_price,
@@ -110,7 +108,6 @@ class ProductController extends Controller
         }
         
         try {       
-            //return response()->json(['message' =>  $fields], 200); 
             Product::create($fields);
             return response()->json(['message' => 'El registro se ha guardado exitosamente.'], 200);
         } catch (\Exception $e) {
@@ -144,8 +141,6 @@ class ProductController extends Controller
      */
     public function update(Request $request, $id)
     {
-        sleep(1);
-        //return response()->json(['message' => $request->bulk_unit_price], 200);
         $request->merge([
             'bulk_unit' => $request->bulk_unit === '' ? null : $request->bulk_unit,
             'bulk_unit_price' => $request->bulk_unit_price === '' ? null : $request->bulk_unit_price,
@@ -155,7 +150,7 @@ class ProductController extends Controller
             'old_price' => $request->old_price === '' ? null : $request->old_price,
             'stock' => filter_var($request->stock, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE),
         ]);
-         //return response()->json(['message' => $request->bulk_unit_price], 200);
+
         $fields = $request->validate([
             'catalog_id' => 'required|integer',
             'barcode' => 'required|integer',
@@ -183,9 +178,7 @@ class ProductController extends Controller
         $fields['stock'] = $request->has('stock') ? $request->input('stock') : false; 
         
         $product = Product::findOrFail($id);
-        
-        //return response()->json(['message' => $fields], 200);
-        
+ 
         if($request->hasFile('image_url')){
             if($fields['image_aux'] != 'image_url/default.jpeg'){
                 Storage::disk('public')->delete($fields['image_aux']);
@@ -195,7 +188,6 @@ class ProductController extends Controller
         }else {
             $fields['image_url'] = $fields['image_aux'];
         }
-        //return response()->json(['message' => $fields], 200);
 
         try {
             $product->update($fields); 
@@ -214,7 +206,6 @@ class ProductController extends Controller
      */
     public function destroy($id)
     {
-        sleep(1);
         try {
             $product = Product::findOrFail($id);
             if ($product->image_url !== '/image_url/default.jpeg' && $product->image_url !== 'image_url/default.jpeg' ) {
