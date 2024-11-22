@@ -11,7 +11,7 @@ class UserSeeder extends Seeder
     /**
      * Run the database seeds.
      */
-    private $super_admin = bcrypt('123456789');
+
     public function run(): void
     {
         DB::table('users')->insert([
@@ -19,7 +19,7 @@ class UserSeeder extends Seeder
             'last_name' => 'ejemplo',
             'email' => 'pepe@gmail.com',
             'email_verified_at' => null,
-            'password' => $this->super_admin,
+            'password' => bcrypt('123456789'),
             'role' => 'super_admin',
             'remember_token' => null,
             'created_at' => '2024-09-04 07:13:34',

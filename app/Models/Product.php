@@ -41,4 +41,10 @@ class Product extends Model
         'category_id',
         'type_id',
     ];
+
+    public function cartItems()
+    {
+        return $this->hasMany(CartItem::class);
+    }
+
 }

@@ -9,7 +9,7 @@ use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\HomeController;
 use App\Http\Controllers\Api\EmployeeController;
-//use App\Http\Controllers\Api\CartController;
+use App\Http\Controllers\Api\CartController;
 
 // Ruta pública para el índice principal
 Route::get('/', [HomeController::class, 'index'])->name('home.index');
@@ -20,19 +20,17 @@ Route::middleware('guest')->group(function() {
     Route::post('/login', [AuthController::class, 'login'])->name('login');
 
 });
-//Route::get('/admin/products', [ProductController::class, 'index']);
 // Rutas autenticadas para usuarios registrados
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', [AuthController::class, 'user']);
     Route::post('/logout', [AuthController::class, 'logout'])->name('api.logout');
-    //Route::get('/admin/products', [ProductController::class, 'index']);
     // Rutas para el carrito
-   /*  Route::prefix('cart')->group(function() {
-        Route::get('/', [CartController::class, 'index'])->name('cart.index');
-        Route::post('/create/{id}/{type}', [CartController::class, 'store'])->name('cart.store');
-        Route::put('/update/{id}/{data}', [CartController::class, 'update'])->name('cart.update');
-        Route::delete('/{id}', [CartController::class, 'destroy'])->name('cart.destroy');
-    }); */
+    Route::prefix('cart')->group(function() {
+        Route::get('/', [CartController::class, 'index']);
+        Route::post('/create', [CartController::class, 'add']);
+        //Route::put('/update/{id}/{data}', [CartController::class, 'update'])->name('cart.update');
+        Route::delete('/{id}', [CartController::class, 'remove']);
+    });
 
     // Rutas de administración
      Route::prefix('admin')->group(function () {      
