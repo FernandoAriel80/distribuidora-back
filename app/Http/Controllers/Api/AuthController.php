@@ -50,9 +50,6 @@ class AuthController extends Controller
             $user = User::where('email', $validated['email'])->first();
 
             if (!$user || !Hash::check($validated['password'], $user->password)) {
-               /*  throw ValidationException::withMessages([
-                    'email' => ['Las credenciales no coinciden.'],
-                ]); */
                 return response()->json( ['message'=>'Las credenciales no coinciden.']);
             }
             
