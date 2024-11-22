@@ -24,6 +24,7 @@ Route::middleware('guest')->group(function() {
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', [AuthController::class, 'user']);
     Route::post('/logout', [AuthController::class, 'logout'])->name('api.logout');
+    
     // Rutas para el carrito
     Route::prefix('cart')->group(function() {
         Route::get('/', [CartController::class, 'index']);

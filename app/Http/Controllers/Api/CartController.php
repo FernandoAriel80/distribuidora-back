@@ -25,9 +25,10 @@ class CartController extends Controller
     // Agregar producto al carrito
     public function add(Request $request)
     {
+        //return response()->json(['message' => 'aca']);
         $request->validate([
             'product_id' => 'required|exists:products,id',
-            'quantity' => 'required|integer|min:1',
+            'quantity' => 'required|integer',
         ]);
 
         $product = Product::findOrFail($request->product_id);
@@ -67,10 +68,6 @@ class CartController extends Controller
         $cartItem = $cart->cartItems()->where('id', $id)->first();
 
         if ($cartItem) {
-            $product = $cartItem->product;
-            $product->stock += $cartItem->quantity;
-            $product->save();
-
             $cartItem->delete();
             return response()->json(['message' => 'Producto eliminado del carrito']);
         }
