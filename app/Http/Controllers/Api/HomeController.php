@@ -46,7 +46,6 @@ class HomeController extends Controller
 
             $products = $query->paginate(10)->withQueryString();
             $categories = Category::all('id','name');
-            //dd($products);
             return response()->json([
                 'message' => 'Datos obtenidos exitosamente',
                 'products' => $products,

@@ -45,7 +45,6 @@ class EmployeeController extends Controller
      */
     public function store(Request $request)
     {
-        sleep(1);
         $request->merge([
             'password' => $request->password === $request->password_confirmation ? $request->password : null
         ]);
@@ -97,9 +96,6 @@ class EmployeeController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        sleep(1);
-        
-        //return response()->json(['message' => 'acaaaa'], 200);
         try {
             $user = User::findOrFail($id);
             
@@ -144,7 +140,6 @@ class EmployeeController extends Controller
      */
     public function destroy(string $id)
     {
-        sleep(1);
         try {
             $user = User::findOrFail($id);
             $user->delete();
