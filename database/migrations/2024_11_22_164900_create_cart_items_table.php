@@ -18,6 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('product_id')->nullable(); 
             $table->integer('quantity');
             $table->decimal('total', 8, 2);
+            $table->string('type_price');
             $table->timestamps();
 
             // Definir llaves foráneas
