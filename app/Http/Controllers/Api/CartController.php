@@ -10,10 +10,8 @@ use Illuminate\Http\Request;
 
 class CartController extends Controller
 {
-    // Listar los elementos en el carrito
     public function index(Request $request)
     {
-        // Obtener el carrito del usuario (si está autenticado)
         $cart = Cart::with('cartItems.product')->where('user_id', $request->user()->id)->firstOrCreate();
 
         return response()->json([
@@ -22,32 +20,22 @@ class CartController extends Controller
         ]);
     }
 
-    // Agregar producto al carrito
     public function add(Request $request)
     {
-        //return response()->json(['message' => 'aca']);
         $request->validate([
             'product_id' => 'required|exists:products,id',
-            'quantity' => 'required|integer',
+            'quantity' => 'required|integer|min:1',
         ]);
-
         $product = Product::findOrFail($request->product_id);
-
-        // Verificar si el producto está en stock
-       /*  if ($product->stock < $request->quantity) {
-            return response()->json(['message' => 'Stock insuficiente'], 400);
-        }*/
 
         $cart = Cart::firstOrCreate(['user_id' => $request->user()->id]);
         $cartItem = $cart->cartItems()->where('product_id', $product->id)->first();
-        //return response()->json(['message' => $cart]);
+
         if ($cartItem) {
-            // Si el producto ya está en el carrito, incrementa la cantidad
-            $cartItem->quantity += $request->quantity;
+            $cartItem->quantity = $request->quantity;
             $cartItem->total = $cartItem->quantity * $product->unit_price;
             $cartItem->save();
         } else {
-            // Crear un nuevo CartItem
             $cart->cartItems()->create([
                 'product_id' => $product->id,
                 'quantity' => $request->quantity,
@@ -55,13 +43,11 @@ class CartController extends Controller
             ]);
         }
 
-        // Reducir el stock del producto
         $product->save();
 
         return response()->json(['message' => 'Producto agregado al carrito']);
     }
 
-    // Eliminar un producto del carrito
     public function remove(Request $request, $id)
     {
         $cart = Cart::where('user_id', $request->user()->id)->first();
