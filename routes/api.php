@@ -33,6 +33,11 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('/{id}', [CartController::class, 'remove']);
     });
 
+    //Rutas de Pago
+/*     Route::post('/create-payment-preference', [PaymentController::class, 'createPaymentPreference']);
+    Route::post('/payment/webhook', [PaymentController::class, 'paymentWebhook']); */
+    
+
     // Rutas de administración
      Route::prefix('admin')->group(function () {      
         // Rutas solo para administradores (admin y super_admin)
