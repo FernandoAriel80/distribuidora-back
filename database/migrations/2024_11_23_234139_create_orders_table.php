@@ -9,13 +9,15 @@ class CreateOrdersTable extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->string('order_id')->unique(); // ID de la compra generada por Mercado Pago
-            $table->unsignedBigInteger('user_id')->nullable(); // ID del usuario
-            $table->json('products'); // Información de los productos comprados
-            $table->decimal('total', 10, 2); // Monto total de la compra
-            $table->string('status')->default('pending'); // Estado del pago (pending, approved, failed)
+            $table->unsignedBigInteger('user_id');
+            $table->json('products'); // Detalles de los productos
+            $table->string('status')->default('pending'); // Estado del pago
+            $table->string('payment_id')->nullable(); // ID del pago en Mercado Pago
             $table->timestamps();
+        
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
+        
     }
 
     public function down()

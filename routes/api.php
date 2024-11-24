@@ -36,7 +36,11 @@ Route::middleware('auth:sanctum')->group(function () {
     //Rutas de Pago
 /*     Route::post('/create-payment-preference', [PaymentController::class, 'createPaymentPreference']);
     Route::post('/payment/webhook', [PaymentController::class, 'paymentWebhook']); */
+    /* Route::post('/payment/webhook', [OrderController::class, 'webhook'])->name('payment.webhook'); */
     
+    /* use App\Http\Controllers\OrderController;
+    Route::middleware('auth:sanctum')->get('/orders', [OrderController::class, 'index']); */
+
 
     // Rutas de administración
      Route::prefix('admin')->group(function () {      
