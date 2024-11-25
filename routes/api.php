@@ -1,10 +1,7 @@
 <?php
 
-use Illuminate\Http\Request;
-
-//Route::apiResource('products', ProductController::class);
-
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\HomeController;
@@ -41,6 +38,11 @@ Route::middleware('auth:sanctum')->group(function () {
     /* use App\Http\Controllers\OrderController;
     Route::middleware('auth:sanctum')->get('/orders', [OrderController::class, 'index']); */
 
+    //mercado pago
+    Route::post('/process_payment', [PaymentController::class, 'createPayment']);
+ /*    Route::get('/payment/success', [PaymentController::class, 'success']);
+    Route::get('/payment/failure', [PaymentController::class, 'failure']);
+    Route::get('/payment/pending', [PaymentController::class, 'pending']); */
 
     // Rutas de administración
      Route::prefix('admin')->group(function () {      

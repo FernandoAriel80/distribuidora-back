@@ -4,12 +4,35 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use MercadoPago\SDK;
-use MercadoPago\Preference;
-use MercadoPago\Item;
-
+use MercadoPago\MercadoPagoConfig;
+use MercadoPago\Client\Preference\PreferenceClient;
 class PaymentController extends Controller
 {
+    public function createPayment(Request $request)
+    {
+        MercadoPagoConfig::setAccessToken(env('MERCADOPAGO_ACCESS_TOKEN'));
+        
+        $client = new PreferenceClient();
+
+        $items = [];
+ 
+        foreach ($request->products as $product) {
+            $items[] = [
+                "id" => $product['id'],
+                "title" => $product['title'],
+                "quantity" => (int) $product['quantity'], 
+                "unit_price" => (float) $product['unit_price'], 
+            ];
+        }
+        $preference = $client->create([
+            "items" => $items
+        ]);
+
+        return response()->json([
+            'preference' => $preference
+        ]);
+    }
+}
    /*  public function createPaymentPreference(Request $request)
     {
         SDK::setAccessToken(config('services.mercadopago.access_token'));
@@ -111,4 +134,6 @@ class PaymentController extends Controller
         return response()->json(['status' => 'success'], 200);
     } */
 
-}
+    
+
+
