@@ -30,19 +30,10 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('/{id}', [CartController::class, 'remove']);
     });
 
-    //Rutas de Pago
-/*     Route::post('/create-payment-preference', [PaymentController::class, 'createPaymentPreference']);
-    Route::post('/payment/webhook', [PaymentController::class, 'paymentWebhook']); */
-    /* Route::post('/payment/webhook', [OrderController::class, 'webhook'])->name('payment.webhook'); */
-    
-    /* use App\Http\Controllers\OrderController;
-    Route::middleware('auth:sanctum')->get('/orders', [OrderController::class, 'index']); */
-
     //mercado pago
     Route::post('/process_payment', [PaymentController::class, 'createPayment']);
- /*    Route::get('/payment/success', [PaymentController::class, 'success']);
-    Route::get('/payment/failure', [PaymentController::class, 'failure']);
-    Route::get('/payment/pending', [PaymentController::class, 'pending']); */
+    Route::post('/payment_orders', [PaymentController::class, 'createOrder'])->name('payment.createOrder');
+ 
 
     // Rutas de administración
      Route::prefix('admin')->group(function () {      
