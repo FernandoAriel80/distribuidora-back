@@ -27,7 +27,11 @@ class PaymentController extends Controller
             }
         }
         $preference = $client->create([
-            "items" => $items
+            "items" => $items,
+            "payment_methods" => [
+                "installments" => 6,
+            ],
+            "statement_descriptor" => "Distribuidora",
         ]);
 
         return response()->json([
