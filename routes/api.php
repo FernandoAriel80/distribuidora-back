@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\HomeController;
 use App\Http\Controllers\Api\EmployeeController;
 use App\Http\Controllers\Api\CartController;
+use App\Http\Controllers\Api\OrderController;
 
 // Ruta pública para el índice principal
 Route::get('/', [HomeController::class, 'index'])->name('home.index');
@@ -32,7 +33,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
     //mercado pago
     Route::post('/process_payment', [PaymentController::class, 'createPayment']);
-    Route::post('/payment_orders', [PaymentController::class, 'createOrder'])->name('payment.createOrder');
+    Route::post('/payment_orders', [OrderController::class, 'createOnlineOrder']);
+    Route::get('/payment_orders', [OrderController::class, 'index']);
  
 
     // Rutas de administración

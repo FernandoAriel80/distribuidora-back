@@ -10,12 +10,20 @@ class CreateOrdersTable extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
-            //$table->json('products'); // Detalles de los productos
-            $table->string('payment_id')->nullable(); // ID del pago en Mercado Pago
-            $table->string('status')->default('pending'); // Estado del pago
-            $table->decimal('total')->nullable();
+            $table->string('payment_id')->nullable();
+            $table->decimal('total', 10, 2);
+            $table->string('name');
+            $table->string('last_name');
+            $table->string('dni')->nullable();
+            $table->string('email');
+            $table->string('card_last_numb')->nullable();
+            $table->string('type_card')->nullable();
+            $table->string('card_name_user')->nullable();
+            $table->timestamp('hour_and_date');
+            $table->string('status');
+            $table->string('delivery_status')->default('en revisión');
             $table->timestamps();
-        
+
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
         

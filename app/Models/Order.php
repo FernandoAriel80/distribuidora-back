@@ -12,7 +12,23 @@ class Order extends Model
     protected $fillable = [
         'user_id',
         'payment_id',
-        'status',
         'total',
+        'name',
+        'last_name',
+        'dni',
+        'email',
+        'card_last_numb',
+        'type_card',
+        'card_name_user',
+        'hour_and_date',
+        'status',
+        'delivery_status',
     ];
+
+    // Relación con OrderItems
+    public function orderItems()
+    {
+        return $this->hasMany(OrderItem::class);
+    }
+
 }
