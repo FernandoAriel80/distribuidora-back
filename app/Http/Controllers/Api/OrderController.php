@@ -82,4 +82,53 @@ class OrderController extends Controller
         return response()->json(['status' => 'no_action'], 200);
     }
 
+    public function createInStoreOrder(Request $request){
+        $preferenceItems = $request->preferenceItems;
+        $preferenceTotal = $request->preferenceTotal;
+        //return response()->json(['message' => $preferenceItems]);
+
+        if ($preferenceItems) {
+            $hash = hash('sha256', uniqid());
+            $ID_order = substr(preg_replace('/[^0-9]/', '', $hash), 0, 10);
+            $date = now();
+            $dateInArgentina = Carbon::parse($date)->setTimezone('America/Argentina/Buenos_Aires');
+            $dateInArgentina->format('H:i:s d/m/Y');
+
+            try {
+                     $order = Order::create([
+                        'user_id' => $request->user()->id,
+                        'payment_id' => $ID_order,
+                        'total' => $preferenceTotal,
+                        'name' =>  $request->user()->name,
+                        'last_name' => $request->user()->last_name,
+                        'dni' => null,
+                        'email' => $request->user()->email,
+                        'card_last_numb' => null,
+                        'type_card' => null,    
+                        'card_name_user' => null,
+                        'hour_and_date' => $dateInArgentina,
+                        'status' => 'pendiente',
+                        'delivery_status' => 'en revisión',
+                    ]); 
+                    //$items = json_decode(json_encode($preference->items), true);
+                    if (!empty($preferenceItems)) {
+                        foreach ($preferenceItems as $item) {
+                            if (isset($item['id'], $item['title'], $item['quantity'], $item['unit_price'])) {
+                                $order->orderItems()->create([
+                                    'item_id' => $item['id'],
+                                    'name' => $item['title'],
+                                    'quantity' => $item['quantity'],
+                                    'unit_price' => $item['unit_price'],
+                                    'sub_total' => $item['unit_price'] * $item['quantity'],
+                                ]);
+                            }
+                        }
+                    }
+                    return response()->json(['status' => 'aprovated']);
+            }catch (\Exception $e) {
+    
+                return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+            }
+        }
+    }
 }

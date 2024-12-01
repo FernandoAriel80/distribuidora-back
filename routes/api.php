@@ -47,14 +47,17 @@ Route::middleware('auth:sanctum')->group(function () {
 
     //mercado pago
     Route::post('/process_payment', [PaymentController::class, 'createPayment']);
-    Route::post('/payment_orders', [OrderController::class, 'createOnlineOrder']);
+
+    Route::post('/payment_online_orders', [OrderController::class, 'createOnlineOrder']);
+    Route::post('/payment_in_store_orders', [OrderController::class, 'createInStoreOrder']);
+
     Route::get('/payment_orders', [OrderController::class, 'index']);
  
-
     // Rutas de administración
      Route::prefix('admin')->group(function () {      
         // Rutas solo para administradores (admin y super_admin)
         Route::middleware('is_admin:admin,super_admin')->group(function () {
+            
             Route::prefix('products')->group(function () {
                 Route::get('/', [ProductController::class, 'index']);
                 Route::get('/create', [ProductController::class, 'create']);
@@ -64,9 +67,9 @@ Route::middleware('auth:sanctum')->group(function () {
             });
 
             Route::prefix('orders')->group(function () {
-                Route::get('/', [OrderController::class, 'getAllOrders']);
+               /*  Route::get('/', [OrderController::class, 'getAllOrders']);
                 Route::put('/{id}', [OrderController::class, 'updateOrderStatus']);
-                Route::get('/{id}/products', [OrderController::class, 'getOrderProducts']);
+                Route::get('/{id}/products', [OrderController::class, 'getOrderProducts']); */
             });
             Route::get('/dashboard', [DashboardController::class, 'getDashboardData']);
             Route::get('/clients', [CustomerController::class, 'getClients']);
