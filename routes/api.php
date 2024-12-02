@@ -35,7 +35,6 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('/delete_account', [ProfileController::class, 'deleteAccount']);
     });
     
-
     
     // Rutas para el carrito
     Route::prefix('cart')->group(function() {

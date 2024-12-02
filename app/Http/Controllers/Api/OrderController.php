@@ -64,11 +64,11 @@ class OrderController extends Controller
                         'card_name_user' => $payment->card->cardholder->name,
                         'hour_and_date' => $dateInArgentina,
                         'status' => match ($payment->status) {
-                                        'approved' => 'pagado',
-                                        'pending' => 'pendiente',
-                                        default => 'cancelado',
+                                        'Pagado' => 'Pagado',
+                                        'Pendiente' => 'Pendiente',
+                                        default => 'Cancelado',
                                     },
-                        'delivery_status' => 'en revisión',
+                        'delivery_status' => 'Revision',
                     ]); 
                     $items = json_decode(json_encode($preference->items), true);
                     if (!empty($items)) {
@@ -116,7 +116,7 @@ class OrderController extends Controller
                         'dni' => null,
                         'email' => $request->user()->email,
                         'card_last_numb' => null,
-                        'type_card' => null,    
+                        'type_card' => "Efectivo",    
                         'card_name_user' => null,
                         'hour_and_date' => $dateInArgentina,
                         'status' => 'Pendiente',
