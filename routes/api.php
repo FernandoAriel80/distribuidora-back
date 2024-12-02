@@ -41,17 +41,15 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('cart')->group(function() {
         Route::get('/', [CartController::class, 'index']);
         Route::post('/create', [CartController::class, 'add']);
-        //Route::put('/update/{id}/{data}', [CartController::class, 'update'])->name('cart.update');
         Route::delete('/{id}', [CartController::class, 'remove']);
     });
 
     //mercado pago
-    Route::post('/process_payment', [PaymentController::class, 'createPayment']);
-
-    Route::post('/payment_online_orders', [OrderController::class, 'createOnlineOrder']);
+    Route::post('/process_mercado_pago_payment', [PaymentController::class, 'createMercadoPagoPayment']);
+    //orders
+    Route::post('/payment_mercado_pago_orders', [OrderController::class, 'createMercadoPagoOrder']);
     Route::post('/payment_in_store_orders', [OrderController::class, 'createInStoreOrder']);
 
-    Route::get('/payment_orders', [OrderController::class, 'index']);
  
     // Rutas de administración
      Route::prefix('admin')->group(function () {      
@@ -67,9 +65,8 @@ Route::middleware('auth:sanctum')->group(function () {
             });
 
             Route::prefix('orders')->group(function () {
-               /*  Route::get('/', [OrderController::class, 'getAllOrders']);
-                Route::put('/{id}', [OrderController::class, 'updateOrderStatus']);
-                Route::get('/{id}/products', [OrderController::class, 'getOrderProducts']); */
+                Route::get('/', [OrderController::class, 'index']);
+                Route::put('/{id}', [OrderController::class, 'update']);
             });
             Route::get('/dashboard', [DashboardController::class, 'getDashboardData']);
             Route::get('/clients', [CustomerController::class, 'getClients']);

@@ -14,19 +14,17 @@ use Illuminate\Support\Facades\Hash;
 
 class ProfileController extends Controller
 {
-    public function overview()
+    public function overview( Request $request)
     {
-        $user = User::user();
+        $user = $request->user();
 
-        $address = $user->address()->first();
-        $orders = $user->orders()
-            ->select(['created_at', 'id as order_id', 'total_products', 'total_price', 'status', 'delivery_status'])
-            ->get();
-
+        //$address = $user->address()->first();
+        $orders = Order::with(['orderItems'])->where('user_id','=',$request->user()->id)->get();
+        
         return response()->json([
             'user' => $user,
-            'address' => $address,
             'orders' => $orders,
+           //'address' => $address,
         ]);
     }
 

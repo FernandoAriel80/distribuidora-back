@@ -14,10 +14,23 @@ class OrderController extends Controller
 {
     public function index()
     {
-        $orders = Order::all();
+        //$orders = Order::all();
+        $orders = Order::with(['orderItems'])->get();
+
         return response()->json(['orders' => $orders]);
     }
-    public function createOnlineOrder(Request $request)
+
+    public function update(Request $request, $id)
+    {
+        $order = Order::findOrFail($id);
+        $order->status = $request->status;
+        $order->delivery_status = $request->delivery_status;
+        $order->save();
+
+        return response()->json(['message' => 'Los estados de la orden se actualizaron correctamente ']);
+    }
+
+    public function createMercadoPagoOrder(Request $request)
     {
 
         $paymentId = $request->paymentId;
@@ -85,7 +98,6 @@ class OrderController extends Controller
     public function createInStoreOrder(Request $request){
         $preferenceItems = $request->preferenceItems;
         $preferenceTotal = $request->preferenceTotal;
-        //return response()->json(['message' => $preferenceItems]);
 
         if ($preferenceItems) {
             $hash = hash('sha256', uniqid());
@@ -93,7 +105,7 @@ class OrderController extends Controller
             $date = now();
             $dateInArgentina = Carbon::parse($date)->setTimezone('America/Argentina/Buenos_Aires');
             $dateInArgentina->format('H:i:s d/m/Y');
-
+            
             try {
                      $order = Order::create([
                         'user_id' => $request->user()->id,
@@ -107,12 +119,12 @@ class OrderController extends Controller
                         'type_card' => null,    
                         'card_name_user' => null,
                         'hour_and_date' => $dateInArgentina,
-                        'status' => 'pendiente',
-                        'delivery_status' => 'en revisión',
+                        'status' => 'Pendiente',
+                        'delivery_status' => 'Revision',
                     ]); 
-                    //$items = json_decode(json_encode($preference->items), true);
-                    if (!empty($preferenceItems)) {
-                        foreach ($preferenceItems as $item) {
+                    $items = json_decode(json_encode($preferenceItems), true);
+                    if (!empty($items)) {
+                        foreach ($items as $item) {
                             if (isset($item['id'], $item['title'], $item['quantity'], $item['unit_price'])) {
                                 $order->orderItems()->create([
                                     'item_id' => $item['id'],

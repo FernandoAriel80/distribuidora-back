@@ -9,7 +9,7 @@ use MercadoPago\Client\Preference\PreferenceClient;
 
 class PaymentController extends Controller
 {
-    public function createPayment(Request $request)
+    public function createMercadoPagoPayment(Request $request)
     {
         MercadoPagoConfig::setAccessToken(env('MERCADOPAGO_ACCESS_TOKEN'));
         
