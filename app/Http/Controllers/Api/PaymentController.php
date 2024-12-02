@@ -22,17 +22,17 @@ class PaymentController extends Controller
         ];
 
         $items = [];
- 
         foreach ($request->products as $product) {
             if ($product['stock'] == 1) {
-               $items[] = [
-                   "id" => $product['id'],
-                   "title" => $product['title'],
-                   "quantity" => (int) $product['quantity'], 
-                   "unit_price" => (float) $product['unit_price'], 
-               ];
+                $items[] = [
+                    "id" => $product['id'],
+                    "title" => $product['title'],
+                    "quantity" => (int) $product['quantity'], 
+                    "unit_price" => (float) $product['unit_price'], 
+                ];
             }
         }
+
         $preference = $client->create([
             "items" => $items,
             "payment_methods" => [
@@ -49,7 +49,7 @@ class PaymentController extends Controller
         ]);
 
         return response()->json([
-            'preference' => $preference
+            'preference' => $preference,
         ]);
     } 
    

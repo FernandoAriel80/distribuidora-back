@@ -41,6 +41,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/', [CartController::class, 'index']);
         Route::post('/create', [CartController::class, 'add']);
         Route::delete('/{id}', [CartController::class, 'remove']);
+        Route::delete('/all/{id}',[CartController::class,'removeCart']);
+        Route::post('/all/online',[CartController::class,'removeCartOnline']);
     });
 
     //mercado pago

@@ -32,9 +32,9 @@ class OrderController extends Controller
 
     public function createMercadoPagoOrder(Request $request)
     {
-
         $paymentId = $request->paymentId;
         $preferenceId = $request->preferenceId;
+      
         if ($paymentId) {
             try {
                 MercadoPagoConfig::setAccessToken(env('MERCADOPAGO_ACCESS_TOKEN'));
@@ -64,8 +64,8 @@ class OrderController extends Controller
                         'card_name_user' => $payment->card->cardholder->name,
                         'hour_and_date' => $dateInArgentina,
                         'status' => match ($payment->status) {
-                                        'Pagado' => 'Pagado',
-                                        'Pendiente' => 'Pendiente',
+                                        'approved' => 'Pagado',
+                                        'pending' => 'Pendiente',
                                         default => 'Cancelado',
                                     },
                         'delivery_status' => 'Revision',
@@ -98,7 +98,7 @@ class OrderController extends Controller
     public function createInStoreOrder(Request $request){
         $preferenceItems = $request->preferenceItems;
         $preferenceTotal = $request->preferenceTotal;
-
+        
         if ($preferenceItems) {
             $hash = hash('sha256', uniqid());
             $ID_order = substr(preg_replace('/[^0-9]/', '', $hash), 0, 10);
@@ -123,8 +123,10 @@ class OrderController extends Controller
                         'delivery_status' => 'Revision',
                     ]); 
                     $items = json_decode(json_encode($preferenceItems), true);
+                    $currentCartID = 0; 
                     if (!empty($items)) {
                         foreach ($items as $item) {
+                            $currentCartID = $item['cart_id'];
                             if (isset($item['id'], $item['title'], $item['quantity'], $item['unit_price'])) {
                                 $order->orderItems()->create([
                                     'item_id' => $item['id'],
@@ -136,7 +138,7 @@ class OrderController extends Controller
                             }
                         }
                     }
-                    return response()->json(['status' => 'aprovated']);
+                    return response()->json(['status' => 'aprovated', 'cart_id' => $currentCartID]);
             }catch (\Exception $e) {
     
                 return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
