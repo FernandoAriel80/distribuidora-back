@@ -12,14 +12,21 @@ use Carbon\Carbon;
 
 class OrderController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        //$orders = Order::all();
-        $orders = Order::with(['orderItems'])->get();
-
+        
+        $request->validate([
+            'search' => 'nullable|string|max:255',
+        ]);
+        
+        $search = (string) $request->input('search', '');
+        
+        $orders = Order::with(['orderItems'])->search($search)->orderBy('id', 'desc')->get();
+        
         return response()->json(['orders' => $orders]);
     }
-
+    
+    //$orders = Order::with(['orderItems'])->get();
     public function update(Request $request, $id)
     {
         $order = Order::findOrFail($id);

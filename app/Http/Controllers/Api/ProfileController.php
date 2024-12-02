@@ -19,7 +19,7 @@ class ProfileController extends Controller
         $user = $request->user();
 
         //$address = $user->address()->first();
-        $orders = Order::with(['orderItems'])->where('user_id','=',$request->user()->id)->get();
+        $orders = Order::with(['orderItems'])->where('user_id','=',$request->user()->id)->orderBy('id', 'desc')->get();
         
         return response()->json([
             'user' => $user,
