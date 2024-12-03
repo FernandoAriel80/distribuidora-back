@@ -26,6 +26,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', [AuthController::class, 'user']);
     Route::post('/logout', [AuthController::class, 'logout'])->name('api.logout');
 
+    Route::prefix('address')->group(function() {
+        Route::get('/',[AuthController::class,'hasAddress']);
+        Route::post('/create',[AuthController::class,'createAddress']);
+    });
+
     //Ruta para el perfil
     Route::prefix('profile')->group(function() {
         Route::get('/overview', [ProfileController::class, 'overview']);

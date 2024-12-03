@@ -122,16 +122,18 @@ class OrderController extends Controller
             $date = now();
             $dateInArgentina = Carbon::parse($date)->setTimezone('America/Argentina/Buenos_Aires');
             $dateInArgentina->format('H:i:s d/m/Y');
-            
+            $user = $request->user();
+            $address = $user->address()->first();
+    
             try {
                      $order = Order::create([
-                        'user_id' => $request->user()->id,
+                        'user_id' => $user->id,
                         'payment_id' => $ID_order,
                         'total' => $preferenceTotal,
-                        'name' =>  $request->user()->name,
-                        'last_name' => $request->user()->last_name,
-                        'dni' => null,
-                        'email' => $request->user()->email,
+                        'name' =>  $user->name,
+                        'last_name' => $user->last_name,
+                        'dni' => $address->dni,
+                        'email' => $user->email,
                         'card_last_numb' => null,
                         'type_card' => "Efectivo",    
                         'card_name_user' => null,

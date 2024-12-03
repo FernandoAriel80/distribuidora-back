@@ -32,6 +32,8 @@ class PaymentController extends Controller
                 ];
             }
         }
+        $user = $request->user();
+        $address = $user->address()->first();
 
         $preference = $client->create([
             "items" => $items,
@@ -39,9 +41,13 @@ class PaymentController extends Controller
                 "installments" => 6,
             ],
             "payer" =>[
-                "name" => $request->user()->name,
-                "surname" => $request->user()->last_name,
-                "email" => $request->user()->email,
+                "name" => $user->name,
+                "surname" => $user->last_name,
+                "email" => $user->email,
+                "identification" => [
+                    "type" => "DNI",  
+                    "number" => $address->dni, 
+                ],
             ],
             "back_urls" => $backUrls,
             "auto_return" => "approved",

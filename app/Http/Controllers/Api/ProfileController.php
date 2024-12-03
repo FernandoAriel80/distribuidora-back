@@ -17,14 +17,13 @@ class ProfileController extends Controller
     public function overview( Request $request)
     {
         $user = $request->user();
-
-        //$address = $user->address()->first();
+        $address = $user->address()->first();
         $orders = Order::with(['orderItems'])->where('user_id','=',$request->user()->id)->orderBy('id', 'desc')->get();
         
         return response()->json([
             'user' => $user,
             'orders' => $orders,
-           //'address' => $address,
+            'address' => $address,
         ]);
     }
 
