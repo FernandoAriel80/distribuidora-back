@@ -104,16 +104,20 @@ class AuthController extends Controller
 
     public function createAddress(Request $request)
     {
-       
+     /*    return response()->json([
+           'message' => 'acaaaa'
+        ], 200);  */
         try {
             $validated = $request->validate([
                 'dni' => 'required|string|max:20',
                 'phone_number' => 'required|string|regex:/^[0-9]{10}$/',
                 'gender' => 'required|string|in:hombre,mujer,otros',
                 'address' => 'required|string|max:255',
+                'department' =>'nullable|string|max:100',
                 'city' => 'required|string|max:100',
                 'postal_code' => 'required|string|max:20',
             ]);
+           
  
             $address = Address::create([
                 'user_id' => $request->user()->id,
@@ -121,9 +125,13 @@ class AuthController extends Controller
                 'phone_number' => $validated['phone_number'],
                 'gender' => $validated['gender'],
                 'address' => $validated['address'],
+                'department' => $validated['department'],
                 'city' => $validated['city'],
                 'postal_code' => $validated['postal_code'],
             ]);
+            return response()->json([
+                'message' => $address
+             ], 200); 
 
             return response()->json([
                 'message' => 'Dirección creada exitosamente.',

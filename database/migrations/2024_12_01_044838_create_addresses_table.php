@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('phone_number', 20);
             $table->string('gender', 10);
             $table->text('address');
+            $table->string('department')->nullable();
             $table->string('city', 100);
             $table->string('postal_code', 20);
             $table->timestamps();

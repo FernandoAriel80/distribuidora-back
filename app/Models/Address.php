@@ -15,6 +15,7 @@ class Address extends Model
         'phone_number',
         'gender',
         'address',
+        'department',
         'city',
         'postal_code',
     ];
