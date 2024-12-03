@@ -29,10 +29,10 @@ Route::middleware('auth:sanctum')->group(function () {
     //Ruta para el perfil
     Route::prefix('profile')->group(function() {
         Route::get('/overview', [ProfileController::class, 'overview']);
-        Route::put('/update_info', [ProfileController::class, 'updateInfo']);
+       /*  Route::put('/update_info', [ProfileController::class, 'updateInfo']);
         Route::put('/update_password', [ProfileController::class, 'updatePassword']);
         Route::put('/update_address', [ProfileController::class, 'updateAddress']);
-        Route::delete('/delete_account', [ProfileController::class, 'deleteAccount']);
+        Route::delete('/delete_account', [ProfileController::class, 'deleteAccount']); */
     });
     
     
@@ -69,8 +69,8 @@ Route::middleware('auth:sanctum')->group(function () {
                 Route::get('/', [OrderController::class, 'index']);
                 Route::put('/{id}', [OrderController::class, 'update']);
             });
-            Route::get('/dashboard', [DashboardController::class, 'getDashboardData']);
-            Route::get('/clients', [CustomerController::class, 'getClients']);
+           /*  Route::get('/dashboard', [DashboardController::class, 'getDashboardData']);
+            Route::get('/clients', [CustomerController::class, 'getClients']); */
         });
 
         // Rutas solo para super administradores (super_admin)

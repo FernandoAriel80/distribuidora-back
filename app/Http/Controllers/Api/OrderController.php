@@ -14,16 +14,26 @@ class OrderController extends Controller
 {
     public function index(Request $request)
     {
-        
         $request->validate([
             'search' => 'nullable|string|max:255',
         ]);
         
         $search = (string) $request->input('search', '');
+        try {
+            $orders = Order::with(['orderItems'])
+            ->search($search)
+            ->orderBy('id', 'desc')
+            ->paginate(10)
+            ->withQueryString();
         
-        $orders = Order::with(['orderItems'])->search($search)->orderBy('id', 'desc')->get();
-        
-        return response()->json(['orders' => $orders]);
+            return response()->json(['orders' => $orders]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error al obtener producto.',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+       
     }
     
     //$orders = Order::with(['orderItems'])->get();
