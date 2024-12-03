@@ -104,17 +104,18 @@ class AuthController extends Controller
 
     public function createAddress(Request $request)
     {
+       
         try {
             $validated = $request->validate([
                 'dni' => 'required|string|max:20',
-                'phone_number' => 'nullable|regex:/^[0-9]{10}$/',
+                'phone_number' => 'required|string|regex:/^[0-9]{10}$/',
                 'gender' => 'required|string|in:hombre,mujer,otros',
                 'address' => 'required|string|max:255',
                 'city' => 'required|string|max:100',
                 'postal_code' => 'required|string|max:20',
             ]);
-            
-            Address::create([
+ 
+            $address = Address::create([
                 'user_id' => $request->user()->id,
                 'dni' => $validated['dni'],
                 'phone_number' => $validated['phone_number'],
