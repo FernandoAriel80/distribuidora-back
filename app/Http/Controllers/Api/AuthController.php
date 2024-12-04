@@ -93,13 +93,16 @@ class AuthController extends Controller
     }
 
     public function hasAddress(Request $request){
-
-        $exists = Address::where('user_id', '=', $request->user()->id)->exists();
-        if ($exists) {
-            return response()->json(['exist' => true]);
-        }else{
-            return response()->json(['exist' => false]);
+        $user = $request->user();
+        if ($user->role != 'admin') {
+            $exists = Address::where('user_id', '=', $user->id)->exists();
+            if ($exists) {
+                return response()->json(['exist' => true]);
+            }else{
+                return response()->json(['exist' => false]);
+            }
         }
+        return response()->json(['exist' => false]);
     }
 
     public function createAddress(Request $request)
@@ -129,9 +132,6 @@ class AuthController extends Controller
                 'city' => $validated['city'],
                 'postal_code' => $validated['postal_code'],
             ]);
-            return response()->json([
-                'message' => $address
-             ], 200); 
 
             return response()->json([
                 'message' => 'Dirección creada exitosamente.',

@@ -34,10 +34,10 @@ Route::middleware('auth:sanctum')->group(function () {
     //Ruta para el perfil
     Route::prefix('profile')->group(function() {
         Route::get('/overview', [ProfileController::class, 'overview']);
-       /*  Route::put('/update_info', [ProfileController::class, 'updateInfo']);
+        Route::put('/update_info', [ProfileController::class, 'updateInfo']);
         Route::put('/update_password', [ProfileController::class, 'updatePassword']);
         Route::put('/update_address', [ProfileController::class, 'updateAddress']);
-        Route::delete('/delete_account', [ProfileController::class, 'deleteAccount']); */
+        Route::delete('/delete_account', [ProfileController::class, 'deleteAccount']);
     });
     
     
