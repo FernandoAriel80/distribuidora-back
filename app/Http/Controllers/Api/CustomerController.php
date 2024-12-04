@@ -16,14 +16,14 @@ class CustomerController extends Controller
         
         $search = (string) $request->input('search', '');
 
-        $clients = User::where('role','=', 'cliente')
-        ->with('address')
+        $clients = User::with('address')
+        ->where('role','=', 'cliente')
         ->search($search)
         ->paginate(10)
         ->withQueryString();
         //->get(['id', 'name', 'last_name', 'email']);
 
-
+      
         return response()->json(['clients' => $clients]);
     }
 }
