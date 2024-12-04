@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\ActionLogController;
 use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\AuthController;
@@ -90,6 +91,8 @@ Route::middleware('auth:sanctum')->group(function () {
                 Route::put('/edit/{id}', [EmployeeController::class, 'update']);
                 Route::delete('/{id}', [EmployeeController::class, 'destroy']);
             });
+
+            Route::get('/action_logs', [ActionLogController::class, 'index']);
         });
     }); 
 });

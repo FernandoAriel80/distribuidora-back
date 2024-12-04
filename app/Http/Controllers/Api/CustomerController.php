@@ -10,20 +10,25 @@ class CustomerController extends Controller
 {
     public function index(Request $request)
     {
-        $request->validate([
-            'search' => 'nullable|string|max:255',
-        ]);
+        try {
+            $request->validate([
+                'search' => 'nullable|string|max:255',
+            ]);
+
+            $search = (string) $request->input('search', '');
+
+            $clients = User::with('address')
+            ->where('role','=', 'cliente')
+            ->search($search)
+            ->paginate(10)
+            ->withQueryString();
         
-        $search = (string) $request->input('search', '');
-
-        $clients = User::with('address')
-        ->where('role','=', 'cliente')
-        ->search($search)
-        ->paginate(10)
-        ->withQueryString();
-        //->get(['id', 'name', 'last_name', 'email']);
-
-      
-        return response()->json(['clients' => $clients]);
+            return response()->json(['clients' => $clients]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error al obtener cliente.',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 }

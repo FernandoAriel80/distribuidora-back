@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\ActionLog;
 use Illuminate\Http\Request;
 use App\Models\Order;
 use MercadoPago\MercadoPagoConfig;
@@ -36,10 +37,35 @@ class OrderController extends Controller
        
     }
     
-    //$orders = Order::with(['orderItems'])->get();
     public function update(Request $request, $id)
     {
         $order = Order::findOrFail($id);
+        $user = $request->user();
+
+        if ($order->status != $request->status) {
+            $log = ActionLog::create([
+                'user_id' => $user->id,
+                'name' => $user->name,
+                'last_name' => $user->last_name,
+                'email' => $user->email,
+                'action' => $request->status,
+                'description' => 'Cambio el estado del pedido de "'.$order->status.'" a "'.$request->status.'"',
+                'orders_id' => $order->id,
+                'payment_id' => $order->payment_id,
+            ]);
+        }
+        if ($order->delivery_status != $request->delivery_status) {
+            $log = ActionLog::create([
+                'user_id' => $user->id,
+                'name' => $user->name,
+                'last_name' => $user->last_name,
+                'email' => $user->email,
+                'action' => $request->delivery_status,
+                'description' => 'Cambio el estado de entrega del pedido de "'.$order->delivery_status.'" a "'.$request->delivery_status.'"',
+                'orders_id' => $order->id,
+                'payment_id' => $order->payment_id,
+            ]);
+        }
         $order->status = $request->status;
         $order->delivery_status = $request->delivery_status;
         $order->save();
