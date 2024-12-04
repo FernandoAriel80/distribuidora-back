@@ -19,16 +19,20 @@ class User extends Authenticatable
      */
     public function scopeSearch($query, $search)
     {
-
-        $query->where('role', '=', 'admin');
- 
+        //$query->where('role', '=', 'admin');
         if ($search) {
             $query->where(function($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
-                ->orWhere('email', 'like', "%{$search}%");
+                ->orWhere('email', 'like', "%{$search}%")
+                ->orWhere('last_name','like',"%{$search}%");
             });
         }
         return $query;
+        /* if ($search) {
+            return $query->where('name', 'like', "%{$search}%")
+            ->orWhere('last_name','like',"%{$search}%")
+            ->orWhere('dni','like',"%{$search}%");
+        } */
     }
 
     

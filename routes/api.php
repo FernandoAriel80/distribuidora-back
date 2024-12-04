@@ -74,6 +74,10 @@ Route::middleware('auth:sanctum')->group(function () {
                 Route::get('/', [OrderController::class, 'index']);
                 Route::put('/{id}', [OrderController::class, 'update']);
             });
+
+            Route::prefix('customers')->group(function(){
+                Route::get('/',[CustomerController::class, 'index']);
+            });
            /*  Route::get('/dashboard', [DashboardController::class, 'getDashboardData']);
             Route::get('/clients', [CustomerController::class, 'getClients']); */
         });

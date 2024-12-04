@@ -9,7 +9,10 @@ class Order extends Model
     public function scopeSearch($query, $search)
     {
         if ($search) {
-            return $query->where('payment_id', 'like', "%{$search}%")->orWhere('name','like',"%{$search}%")->orWhere('last_name','like',"%{$search}%")->orWhere('dni','like',"%{$search}%");
+            return $query->where('payment_id', 'like', "%{$search}%")
+            ->orWhere('name','like',"%{$search}%")
+            ->orWhere('last_name','like',"%{$search}%")
+            ->orWhere('dni','like',"%{$search}%");
         }
     }
     protected $table = 'orders';

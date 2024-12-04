@@ -8,14 +8,22 @@ use App\Models\User;
 
 class CustomerController extends Controller
 {
-    public function getClients()
+    public function index(Request $request)
     {
-        // Obtiene todos los usuarios con rol de 'cliente' y sus direcciones
- /*        $clients = User::where('role', 'cliente')
-            ->with('address') // Relación con direcciones
-            ->get(['id', 'name', 'last_name', 'email']); // Solo los campos necesarios
- */
-        $clients = User::all();
+        $request->validate([
+            'search' => 'nullable|string|max:255',
+        ]);
+        
+        $search = (string) $request->input('search', '');
+
+        $clients = User::where('role','=', 'cliente')
+        ->with('address')
+        ->search($search)
+        ->paginate(10)
+        ->withQueryString();
+        //->get(['id', 'name', 'last_name', 'email']);
+
+
         return response()->json(['clients' => $clients]);
     }
 }
