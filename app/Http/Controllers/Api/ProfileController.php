@@ -57,15 +57,15 @@ class ProfileController extends Controller
             if ($user->role != 'admin') {
                 $request->validate([
                     'current_password' => 'required',
-                    'new_password' => 'required|string|min:8',
-                    'confirm_password' => 'required|string|same:new_password',
+                    'password' => 'required|string|min:8',
+                    'password_confirmation' => 'required|string|same:password',
                 ]);
                   
                 if (!Hash::check($request->current_password, $user->password)) {
                     return response()->json(['message' => 'Current password is incorrect.'], 422);
                 }
   
-                $user->update(['password' => Hash::make($request->new_password)]);
+                $user->update(['password' => Hash::make($request->password)]);
       
                 return response()->json(['message' => 'La contraseña a sigo actualizada exitosamente.']);
             }
