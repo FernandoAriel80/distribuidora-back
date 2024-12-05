@@ -34,7 +34,7 @@ class DashboardController extends Controller
         ->get();
 
         // LOS 5 PRODUCTOS MAS COMPRADOS DE EL MES PASADO
-        $topProductsLastMonth = OrderItem::select('name', 'unit_price', DB::raw('SUM(quantity) as total_quantity'))
+        $topBestProductsLastMonth = OrderItem::select('name', 'unit_price', DB::raw('SUM(quantity) as total_quantity'))
         ->whereMonth('created_at',$lastMonth)
         ->groupBy('name', 'unit_price')
         ->orderByDesc('total_quantity')
@@ -42,32 +42,47 @@ class DashboardController extends Controller
         ->get();
 
           // LOS 5 PRODUCTOS MAS COMPRADOS DE ESTE MES 
-        $topProductsMonth = OrderItem::select('name', 'unit_price', DB::raw('SUM(quantity) as total_quantity'))
+        $topBestProductsCurrentMonth = OrderItem::select('name', 'unit_price', DB::raw('SUM(quantity) as total_quantity'))
         ->whereMonth('created_at',$currentMonth)
         ->groupBy('name', 'unit_price')
         ->orderByDesc('total_quantity')
         ->limit(5)
         ->get();
 
+        //Ranking: Productos Menos Vendidos
+        // LOS 5 PRODUCTOS MENOS COMPRADOS DE EL MES PASADO
+        $topWorstProductsCurrentMonth = OrderItem::select('name', 'unit_price', DB::raw('SUM(quantity) as total_quantity'))
+        ->whereMonth('created_at',$lastMonth)
+        ->groupBy('name', 'unit_price')
+        ->orderByRaw('total_quantity')
+        ->limit(5)
+        ->get();
+          // LOS 5 PRODUCTOS MENOS COMPRADOS DE ESTE MES 
+        $topWorstProductsLastMonth = OrderItem::select('name', 'unit_price', DB::raw('SUM(quantity) as total_quantity'))
+        ->whereMonth('created_at',$currentMonth)
+        ->groupBy('name', 'unit_price')
+        ->orderByRaw('total_quantity')
+        ->limit(5)
+        ->get();
+    
        // Ganancias mes actual y mes anterior
-      /*   $earningsLastMonth = Order::whereMonth('created_at', $lastMonth)
-            ->where('status', 'paid')
-            ->sum('total_price');
+        $earningsLastMonth = Order::whereMonth('created_at', $lastMonth)
+            ->where('status', 'Pagado')
+            ->sum('total');
 
         $earningsCurrentMonth = Order::whereMonth('created_at', $currentMonth)
-            ->where('status', 'paid')
-            ->sum('total_price'); */
+            ->where('status', 'Pagado')
+            ->sum('total'); 
 
         return response()->json([
-            //'topProductsAllYear' => $topProductsAllYear, 
-            //'topProductsLastMonth' => $topProductsLastMonth,
-            //'topProductsMonth' => $topProductsMonth,
-            //'topProductsYear' => $topProductsYear, 
-            
-             /* 'earningsComparison' => [
-                'currentMonth' => $earningsCurrentMonth,
-                'lastMonth' => $earningsLastMonth,
-            ], */
+            'currentMonth' => $earningsCurrentMonth,
+            'lastMonth' => $earningsLastMonth,        
+            'topBestProductsCurrentMonth' => $topBestProductsCurrentMonth,
+            'topBestProductsLastMonth' => $topBestProductsLastMonth,
+            'topWorstProductsCurrentMonth' => $topWorstProductsCurrentMonth,
+            'topWorstProductsLastMonth' => $topWorstProductsLastMonth,
+            'topProductsAllYear' => $topProductsAllYear, 
+            'topProductsYear' => $topProductsYear, 
         ]);
     }
 }
