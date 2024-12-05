@@ -79,19 +79,20 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::prefix('customers')->group(function(){
                 Route::get('/',[CustomerController::class, 'index']);
             });
-           /*  Route::get('/dashboard', [DashboardController::class, 'getDashboardData']);
-            Route::get('/clients', [CustomerController::class, 'getClients']); */
-        });
 
+            
+        });
+        
         // Rutas solo para super administradores (super_admin)
-         Route::middleware('is_admin:super_admin')->group(function () {
+        Route::middleware('is_admin:super_admin')->group(function () {
             Route::prefix('employees')->group(function() {
                 Route::get('/', [EmployeeController::class, 'index']);
                 Route::post('/create', [EmployeeController::class, 'store']);
                 Route::put('/edit/{id}', [EmployeeController::class, 'update']);
                 Route::delete('/{id}', [EmployeeController::class, 'destroy']);
             });
-
+            
+            Route::get('/dashboard', [DashboardController::class, 'index']);
             Route::get('/action_logs', [ActionLogController::class, 'index']);
         });
     }); 

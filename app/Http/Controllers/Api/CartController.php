@@ -9,15 +9,6 @@ use Illuminate\Http\Request;
 
 class CartController extends Controller
 {
-  /*   public function index(Request $request)
-    {
-        $cart = Cart::with('cartItems.product')->where('user_id', $request->user()->id)->firstOrCreate();
-
-        return response()->json([
-            'items' => $cart->cartItems,
-            'total' => $cart->total,
-        ]);
-    } */
     public function index(Request $request)
     {
         $cart = Cart::with('cartItems.product')->where('user_id', $request->user()->id)->firstOrCreate();
