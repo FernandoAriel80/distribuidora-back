@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\HomeController;
 use App\Http\Controllers\Api\EmployeeController;
 use App\Http\Controllers\Api\CartController;
+use App\Http\Controllers\Api\CategotyController;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\ProfileController;
 Use App\Http\Controllers\Api\CustomerController;
@@ -41,6 +42,9 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('/delete_account', [ProfileController::class, 'deleteAccount']);
     });
     
+    Route::prefix('categories')->group(function(){
+        Route::get('/',[CategotyController::class,'index']);
+    });
     
     // Rutas para el carrito
     Route::prefix('cart')->group(function() {
