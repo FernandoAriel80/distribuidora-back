@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Category;
+use App\Models\Product;
 use App\Models\TopCategory;
 use Illuminate\Http\Request;
 
@@ -36,9 +38,42 @@ class CategotyController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Request $request, string $id)
     {
-        //
+        try {
+            $request->validate([
+                'search' => 'nullable|string|max:255',
+                'sort' => 'nullable|string|in:rel,lPrice,hPrice',
+            ]);
+            
+            $search = $request->input('search', '');
+            $sort = $request->input('sort', 'rel');
+
+            $query = Product::with(['type', 'category'])->where('category_id', '=', $id);
+            
+            if ($search) {
+                $query->where('name', 'like', '%' . $search . '%');
+            }
+            
+            if ($sort === 'rel') {
+                $query->orderBy('updated_at', 'desc');
+            } elseif ($sort === 'lPrice') {
+                $query->orderBy('unit_price', 'asc');
+            } elseif ($sort === 'hPrice') {
+                $query->orderBy('unit_price', 'desc');
+            }
+            $products = $query->get();
+           
+            return response()->json([
+                'products' => $products,
+            ]);
+        }  catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error al obtener producto.',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+        
     }
 
     /**

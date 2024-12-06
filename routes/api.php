@@ -44,6 +44,7 @@ Route::middleware('auth:sanctum')->group(function () {
     
     Route::prefix('categories')->group(function(){
         Route::get('/',[CategotyController::class,'index']);
+        Route::get('/show/{id}',[CategotyController::class,'show']);
     });
     
     // Rutas para el carrito
