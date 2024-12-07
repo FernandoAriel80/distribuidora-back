@@ -15,45 +15,33 @@ class HomeController extends Controller
      */
     public function index(Request $request)
     {
-        $request->validate([
-            'search' => 'nullable|string|max:255',
-            'category' => 'nullable|string|max:255',
-            'sort' => 'nullable|'
-        ]);
-    
-        $search = (string) $request->input('search', '');
-        $category = (string) $request->input('category', '');
-        $sort = $request->input('sort','rel');
-
         try {
-            $query = Product::with(['type', 'category']);
-
-            if ($search) {
-                $query->where('name', 'like', '%' . $search . '%');
-            }
-            if ($category) {
-                $query->whereHas('category', function($q) use ($category) {
-                    $q->where('name', 'like', '%' . $category . '%');
-                });
-            }
-            if ($sort == 'rel') {
-                $query->orderBy('updated_at', 'desc');
-            }else if ($sort == 'lPrice') {
-                $query->orderBy('unit_price', 'asc');
-            }else if ($sort == 'hPrice') {
-                $query->orderBy('unit_price', 'desc');
-            }
-
-            $products = $query->paginate(10)->withQueryString();
-            $categories = Category::all('id','name');
+            $request->validate([
+                'category' => 'required|string|max:255', // Categoría es obligatoria
+                'limit' => 'nullable|integer|min:1|max:50', // Límite de productos (por defecto: 5)
+                'offset' => 'nullable|integer|min:0', // Desplazamiento inicial (por defecto: 0)
+            ]);
+    
+            // Recoger parámetros de la solicitud
+            $category = $request->input('category');
+            $limit = $request->input('limit', 5); // Límite por defecto: 5
+            $offset = $request->input('offset', 0); // Offset por defecto: 0
+    
+            // Consultar los productos según la categoría
+            $products = Product::whereHas('category', function ($query) use ($category) {
+                $query->where('name', $category); // Filtrar por nombre de categoría
+            })
+            ->with(['category'])
+            ->offset($offset)
+            ->limit($limit)
+            ->get();
+    
+            // Devolver los datos en formato JSON
             return response()->json([
-                'message' => 'Datos obtenidos exitosamente',
+                'success' => true,
                 'products' => $products,
-                'categories' => $categories,
-                'searchTerm' => $search,
-                'categoryTerm' => $category,
-                'sortOrder' => $sort  
-            ], 200);
+            ]);
+             
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Error al obtener producto.',
