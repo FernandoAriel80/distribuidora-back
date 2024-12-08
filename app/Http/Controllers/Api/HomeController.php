@@ -34,6 +34,58 @@ class HomeController extends Controller
         }
     }
 
+    public function getAllOffer(Request $request)
+    {
+        try {
+            $perPage = $request->get('per_page', 5); 
+        
+            $products = Product::with(['type', 'category'])->where('offer','=',1)->paginate($perPage);
+            return response()->json(['products'=>$products]);
+    
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error al obtener producto.',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+    public function getAll(Request $request)
+    {
+        try {
+            $request->validate([
+                'search' => 'nullable|string|max:255',
+                'sort' => 'nullable|string|in:rel,lPrice,hPrice',
+            ]);
+            
+            $search = $request->input('search', '');
+            $sort = $request->input('sort', 'rel');
+
+            $query = Product::with(['type', 'category']);
+            
+            if ($search) {
+                $query->where('name', 'like', '%' . $search . '%');
+            }
+            
+            if ($sort === 'rel') {
+                $query->orderBy('updated_at', 'desc');
+            } elseif ($sort === 'lPrice') {
+                $query->orderBy('unit_price', 'asc');
+            } elseif ($sort === 'hPrice') {
+                $query->orderBy('unit_price', 'desc');
+            }
+            $products = $query->paginate(10)->withQueryString();
+           
+            return response()->json([
+                'products' => $products,
+            ]);
+            
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error al obtener producto.',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
     /**
      * Show the form for creating a new resource.
      */

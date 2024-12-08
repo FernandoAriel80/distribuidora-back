@@ -17,6 +17,8 @@ use App\Http\Controllers\Api\LayoutController;
 
 // Ruta pública para el índice principal
 Route::get('/', [HomeController::class, 'index'])->name('home.index');
+Route::get('/getAllOffer', [HomeController::class, 'getAllOffer']);
+Route::get('/getAll', [HomeController::class, 'getAll']);
 
 // Rutas públicas para usuarios invitados
 Route::middleware('guest')->group(function() {
