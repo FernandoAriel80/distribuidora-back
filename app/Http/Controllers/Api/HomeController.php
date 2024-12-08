@@ -16,31 +16,15 @@ class HomeController extends Controller
     public function index(Request $request)
     {
         try {
+          
             $request->validate([
-                'category' => 'required|string|max:255', // Categoría es obligatoria
-                'limit' => 'nullable|integer|min:1|max:50', // Límite de productos (por defecto: 5)
-                'offset' => 'nullable|integer|min:0', // Desplazamiento inicial (por defecto: 0)
+                'category' => 'required|string|max:255',
             ]);
     
-            // Recoger parámetros de la solicitud
             $category = $request->input('category');
-            $limit = $request->input('limit', 5); // Límite por defecto: 5
-            $offset = $request->input('offset', 0); // Offset por defecto: 0
-    
-            // Consultar los productos según la categoría
-            $products = Product::whereHas('category', function ($query) use ($category) {
-                $query->where('name', $category); // Filtrar por nombre de categoría
-            })
-            ->with(['category'])
-            ->offset($offset)
-            ->limit($limit)
-            ->get();
-    
-            // Devolver los datos en formato JSON
-            return response()->json([
-                'success' => true,
-                'products' => $products,
-            ]);
+            $perPage = $request->get('per_page', 5); 
+            $products = Product::with(['type', 'category'])->where('category_id','=',$category)->paginate($perPage);
+            return response()->json(['products'=>$products]);
              
         } catch (\Exception $e) {
             return response()->json([
