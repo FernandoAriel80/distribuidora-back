@@ -13,6 +13,7 @@ use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\ProfileController;
 Use App\Http\Controllers\Api\CustomerController;
 use App\Http\Controllers\Api\DashboardController;
+use App\Http\Controllers\Api\LayoutController;
 
 // Ruta pública para el índice principal
 Route::get('/', [HomeController::class, 'index'])->name('home.index');
@@ -32,6 +33,9 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/',[AuthController::class,'hasAddress']);
         Route::post('/create',[AuthController::class,'createAddress']);
     });
+
+    Route::get('/search', [LayoutController::class, 'search']);
+    Route::get('/search/show/{id}', [LayoutController::class, 'show']);
 
     //Ruta para el perfil
     Route::prefix('profile')->group(function() {
