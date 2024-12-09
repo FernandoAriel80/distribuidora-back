@@ -18,7 +18,7 @@ class EmployeeController extends Controller
         $search = (string) $request->input('search', '');
         
         try {
-            $employees = User::search($search)->orderBy('id', 'desc')->get(); 
+            $employees = User::where('role', '=', 'admin')->search($search)->orderBy('id', 'desc')->get(); 
             return response()->json([
                 'message' => 'Empleado obtenido exitosamente',
                 'employees' => $employees,

@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 class User extends Authenticatable
@@ -18,16 +19,14 @@ class User extends Authenticatable
      */
     public function scopeSearch($query, $search)
     {
-
-        $query->where('role', '=', 'admin');
- 
         if ($search) {
-            $query->where(function($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
-                ->orWhere('email', 'like', "%{$search}%");
+            return $query->where('name', 'like', "%{$search}%")
+            ->orWhere('last_name','like',"%{$search}%")
+            ->orWhere('email','like',"%{$search}%")
+            ->orWhereHas('address', function ($query) use ($search) {
+                $query->where('dni', 'like', "%{$search}%");
             });
         }
-        return $query;
     }
 
     
@@ -63,4 +62,15 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+     // Relación con la dirección del usuario
+    
+    public function address()
+    {
+        return $this->hasOne(Address::class);
+    }
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
+
 }

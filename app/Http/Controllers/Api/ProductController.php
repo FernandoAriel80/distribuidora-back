@@ -100,9 +100,8 @@ class ProductController extends Controller
         $fields['offer'] = $request->has('offer') ? $request->input('offer') : false;
         $fields['stock'] = $request->has('stock') ? $request->input('stock') : false; 
         if ($request->hasFile('image_url')) {
-            
             $filename = time() . '_' . $request->file('image_url')->getClientOriginalName();
-            $fields['image_url'] = Storage::disk('public')->putFileAs('image_url', $request->file('image_url'), $filename);
+            $fields['image_url'] = Storage::disk('public')->putFileAs('image_url', $request->file('image_url'), $filename);     
         } else {
             $fields['image_url'] = 'image_url/default.jpeg'; 
         }

@@ -13,9 +13,11 @@ class TypeSeeder extends Seeder
      */
     public function run(): void
     {
+        $now = now();
         DB::table('types')->insert([
-            ['name'=>'Unidad'],
-            ['name'=>'KG'],
+            ['name'=>'Unidad','created_at' => $now,'updated_at' => $now],
+            ['name'=>'KG','created_at' => $now,'updated_at' => $now], 
+
         ]);
     }
 }

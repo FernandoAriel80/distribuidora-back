@@ -4,6 +4,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Address;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
@@ -89,5 +90,59 @@ class AuthController extends Controller
     public function user(Request $request)
     {
         return response()->json($request->user());
+    }
+
+    public function hasAddress(Request $request){
+        $user = $request->user();
+        if ($user->role != 'admin') {
+            $exists = Address::where('user_id', '=', $user->id)->exists();
+            if ($exists) {
+                return response()->json(['exist' => true]);
+            }else{
+                return response()->json(['exist' => false]);
+            }
+        }
+        return response()->json(['exist' => false]);
+    }
+
+    public function createAddress(Request $request)
+    {
+     /*    return response()->json([
+           'message' => 'acaaaa'
+        ], 200);  */
+        try {
+            $validated = $request->validate([
+                'dni' => 'required|string|max:20',
+                'phone_number' => 'required|string|regex:/^[0-9]{10}$/',
+                'gender' => 'required|string|in:hombre,mujer,otros',
+                'address' => 'required|string|max:255',
+                'department' =>'nullable|string|max:100',
+                'city' => 'required|string|max:100',
+                'postal_code' => 'required|string|max:20',
+            ]);
+           
+ 
+            $address = Address::create([
+                'user_id' => $request->user()->id,
+                'dni' => $validated['dni'],
+                'phone_number' => $validated['phone_number'],
+                'gender' => $validated['gender'],
+                'address' => $validated['address'],
+                'department' => $validated['department'],
+                'city' => $validated['city'],
+                'postal_code' => $validated['postal_code'],
+            ]);
+
+            return response()->json([
+                'message' => 'Dirección creada exitosamente.',
+                'confirmed'=>true
+            ], 200);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error al crear la dirección.',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 }

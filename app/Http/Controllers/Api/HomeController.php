@@ -15,45 +15,17 @@ class HomeController extends Controller
      */
     public function index(Request $request)
     {
-        $request->validate([
-            'search' => 'nullable|string|max:255',
-            'category' => 'nullable|string|max:255',
-            'sort' => 'nullable|'
-        ]);
-    
-        $search = (string) $request->input('search', '');
-        $category = (string) $request->input('category', '');
-        $sort = $request->input('sort','rel');
-
         try {
-            $query = Product::with(['type', 'category']);
-
-            if ($search) {
-                $query->where('name', 'like', '%' . $search . '%');
-            }
-            if ($category) {
-                $query->whereHas('category', function($q) use ($category) {
-                    $q->where('name', 'like', '%' . $category . '%');
-                });
-            }
-            if ($sort == 'rel') {
-                $query->orderBy('updated_at', 'desc');
-            }else if ($sort == 'lPrice') {
-                $query->orderBy('unit_price', 'asc');
-            }else if ($sort == 'hPrice') {
-                $query->orderBy('unit_price', 'desc');
-            }
-
-            $products = $query->paginate(10)->withQueryString();
-            $categories = Category::all('id','name');
-            return response()->json([
-                'message' => 'Datos obtenidos exitosamente',
-                'products' => $products,
-                'categories' => $categories,
-                'searchTerm' => $search,
-                'categoryTerm' => $category,
-                'sortOrder' => $sort  
-            ], 200);
+          
+            $request->validate([
+                'category' => 'required|string|max:255',
+            ]);
+    
+            $category = $request->input('category');
+            $perPage = $request->get('per_page', 5); 
+            $products = Product::with(['type', 'category'])->where('category_id','=',$category)->paginate($perPage);
+            return response()->json(['products'=>$products]);
+             
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Error al obtener producto.',
@@ -62,6 +34,58 @@ class HomeController extends Controller
         }
     }
 
+    public function getAllOffer(Request $request)
+    {
+        try {
+            $perPage = $request->get('per_page', 5); 
+        
+            $products = Product::with(['type', 'category'])->where('offer','=',1)->paginate($perPage);
+            return response()->json(['products'=>$products]);
+    
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error al obtener producto.',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+    public function getAll(Request $request)
+    {
+        try {
+            $request->validate([
+                'search' => 'nullable|string|max:255',
+                'sort' => 'nullable|string|in:rel,lPrice,hPrice',
+            ]);
+            
+            $search = $request->input('search', '');
+            $sort = $request->input('sort', 'rel');
+
+            $query = Product::with(['type', 'category']);
+            
+            if ($search) {
+                $query->where('name', 'like', '%' . $search . '%');
+            }
+            
+            if ($sort === 'rel') {
+                $query->orderBy('updated_at', 'desc');
+            } elseif ($sort === 'lPrice') {
+                $query->orderBy('unit_price', 'asc');
+            } elseif ($sort === 'hPrice') {
+                $query->orderBy('unit_price', 'desc');
+            }
+            $products = $query->paginate(10)->withQueryString();
+           
+            return response()->json([
+                'products' => $products,
+            ]);
+            
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error al obtener producto.',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
     /**
      * Show the form for creating a new resource.
      */
