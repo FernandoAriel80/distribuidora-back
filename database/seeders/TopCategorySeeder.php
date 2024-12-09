@@ -13,12 +13,14 @@ class TopCategorySeeder extends Seeder
      */
     public function run(): void
     {
+        $now = now();
+
         $topCategories = [
-            ['name' => 'Almacén'],
-            ['name' => 'Bebidas'],
-            ['name' => 'Desayuno'],
-            ['name' => 'Panadería'],
-            ['name' => 'Kiosco'],
+            ['name' => 'Almacen', 'created_at' => $now, 'updated_at' => $now],
+            ['name' => 'Bebidas', 'created_at' => $now, 'updated_at' => $now],
+            ['name' => 'Desayuno', 'created_at' => $now, 'updated_at' => $now],
+            ['name' => 'Panaderia', 'created_at' => $now, 'updated_at' => $now],
+            ['name' => 'Kiosco', 'created_at' => $now, 'updated_at' => $now],
         ];
 
         DB::table('top_categories')->insert($topCategories);

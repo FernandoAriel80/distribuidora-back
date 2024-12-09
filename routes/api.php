@@ -20,6 +20,11 @@ Route::get('/', [HomeController::class, 'index'])->name('home.index');
 Route::get('/getAllOffer', [HomeController::class, 'getAllOffer']);
 Route::get('/getAll', [HomeController::class, 'getAll']);
 
+Route::prefix('categories')->group(function(){
+    Route::get('/',[CategotyController::class,'index']);
+    Route::get('/show/{id}',[CategotyController::class,'show']);
+});
+
 // Rutas públicas para usuarios invitados
 Route::middleware('guest')->group(function() {
     Route::post('/register', [AuthController::class, 'register'])->name('api.register');
@@ -46,11 +51,6 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::put('/update_password', [ProfileController::class, 'updatePassword']);
         Route::put('/update_address', [ProfileController::class, 'updateAddress']);
         Route::delete('/delete_account', [ProfileController::class, 'deleteAccount']);
-    });
-    
-    Route::prefix('categories')->group(function(){
-        Route::get('/',[CategotyController::class,'index']);
-        Route::get('/show/{id}',[CategotyController::class,'show']);
     });
     
     // Rutas para el carrito
