@@ -25,6 +25,9 @@ Route::prefix('categories')->group(function(){
     Route::get('/show/{id}',[CategotyController::class,'show']);
 });
 
+Route::get('/search', [LayoutController::class, 'search']);
+Route::get('/search/show/{id}', [LayoutController::class, 'show']);
+
 // Rutas públicas para usuarios invitados
 Route::middleware('guest')->group(function() {
     Route::post('/register', [AuthController::class, 'register'])->name('api.register');
@@ -40,9 +43,6 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/',[AuthController::class,'hasAddress']);
         Route::post('/create',[AuthController::class,'createAddress']);
     });
-
-    Route::get('/search', [LayoutController::class, 'search']);
-    Route::get('/search/show/{id}', [LayoutController::class, 'show']);
 
     //Ruta para el perfil
     Route::prefix('profile')->group(function() {
